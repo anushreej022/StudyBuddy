@@ -1,7 +1,7 @@
 const cloudinary = require('cloudinary').v2;
-const multer = require('multer');
 const path = require('path');
 const { cloudinaryFolderConfig } = require('../config/cloudinary');
+const fs = require('fs');
 
 // Configure Cloudinary
 cloudinary.config({
@@ -10,66 +10,51 @@ cloudinary.config({
   api_secret: process.env.API_SECRET
 });
 
-// Multer configuration for image uploads
-const imageStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './frontend/public/backendImages');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
-// Multer configuration for video uploads
-const videoStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './frontend/public/backendVideos');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
-// Initialize image upload
-const imageUpload = multer({
-  storage: imageStorage
-}).single('image');
-
-// Initialize video upload
-const videoUpload = multer({
-  storage: videoStorage
-}).single('video');
-
-// Function to upload image to Cloudinary
-const uploadImageToCloudinary = (file) => {
+const uploadImageToCloudinary = (filePath) => {
   return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload_stream(
-      { folder: cloudinaryFolderConfig.imageFolder }, // Use image folder configuration
-      (error, result) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result);
-        }
+    // Read the file from disk
+    fs.readFile(filePath, (err, fileData) => {
+      if (err) {
+        reject(err);
+      } else {
+        // Upload the file to Cloudinary
+        cloudinary.uploader.upload_stream(
+          { folder: cloudinaryFolderConfig.imageFolder }, // Use image folder configuration
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        ).end(fileData);
       }
-    ).end(file.buffer);
+    });
   });
 };
 
 // Function to upload video to Cloudinary
-const uploadVideoToCloudinary = (file) => {
-  return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload_stream(
-      { folder: cloudinaryFolderConfig.videoFolder }, // Use video folder configuration
-      (error, result) => {
-        if (error) {
-          reject(error);
+const uploadVideoToCloudinary = (filePath) => {
+    return new Promise((resolve, reject) => {
+      // Read the file from disk
+      fs.readFile(filePath, (err, fileData) => {
+        if (err) {
+          reject(err);
         } else {
-          resolve(result);
+          // Upload the file to Cloudinary
+          cloudinary.uploader.upload_stream(
+            { resource_type: 'video', folder: cloudinaryFolderConfig.videoFolder }, // Use image folder configuration
+            (error, result) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(result);
+              }
+            }
+          ).end(fileData);
         }
-      }
-    ).end(file.buffer);
-  });
+      });
+    });
 };
 
 module.exports = { imageUpload, videoUpload, uploadImageToCloudinary, uploadVideoToCloudinary };

@@ -8,6 +8,7 @@ const CourseService = {
       const response = await axios.post(`${API_URL}/createCourse`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+
         },
       });
       console.log('New course created:', response.data);

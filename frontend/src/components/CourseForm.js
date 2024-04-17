@@ -2,79 +2,109 @@ import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 import CourseService from '../services/courseService';
 
-const CourseForm = ({ onSuccess, onError }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [thumbnail, setThumbnail] = useState(null);
-  const [video, setVideo] = useState(null);
-  const [price, setPrice] = useState('');
+const CourseForm = ({ onSuccess }) => {
+  const [courseData, setCourseData] = useState({
+    title: '',
+    description: '',
+    thumbnail: null,
+    video: null,
+    price: ''
+  });
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setCourseData({
+      ...courseData,
+      [name]: value
+    });
+  };
+
+  const handleThumbnailChange = (event) => {
+    setCourseData({
+      ...courseData,
+      thumbnail: event.target.files[0]
+    });
+  };
+
+  const handleVideoChange = (event) => {
+    setCourseData({
+      ...courseData,
+      video: event.target.files[0]
+    });
+  };
+
+  const handleSubmit = async () => {
     try {
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('description', description);
-      formData.append('thumbnail', thumbnail);
-      formData.append('video', video);
-      formData.append('price', price);
+        const formData = new FormData();
 
-      await CourseService.createCourse(formData);
-      onSuccess();
+        // Append text data
+        formData.append('title', courseData.title);
+        formData.append('description', courseData.description);
+        formData.append('price', courseData.price);
+    
+        // Append files
+        if (courseData.thumbnail) {
+          formData.append('thumbnail', courseData.thumbnail);
+        }
+        if (courseData.video) {
+          formData.append('video', courseData.video);
+        }
+    
+        // Send the request with Axios
+        await CourseService.createCourse(formData);
+      
+      onSuccess(); // Call the success callback if the course is created successfully
       // Clear form fields if needed
     } catch (error) {
       console.error('Error creating course:', error);
-      onError();
+      // Handle error
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <TextField
+        name="title"
         label="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={courseData.title}
+        onChange={handleChange}
         fullWidth
         margin="normal"
         required
       />
       <TextField
+        name="description"
         label="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        value={courseData.description}
+        onChange={handleChange}
         fullWidth
         margin="normal"
         required
       />
-      <TextField
+      <input
         type="file"
-        label="Thumbnail"
-        onChange={(e) => setThumbnail(e.target.files[0])}
-        fullWidth
-        margin="normal"
+        onChange={handleThumbnailChange}
         required
       />
-      <TextField
+      <input
         type="file"
-        label="Video"
-        onChange={(e) => setVideo(e.target.files[0])}
-        fullWidth
-        margin="normal"
+        onChange={handleVideoChange}
         required
       />
       <TextField
+        name="price"
         type="number"
         label="Price"
-        value={price}
-        onChange={(e) => setPrice(e.target.value)}
+        value={courseData.price}
+        onChange={handleChange}
         fullWidth
         margin="normal"
         required
       />
-      <Button type="submit" variant="contained" color="primary">
+      <Button onClick={handleSubmit} variant="contained" color="primary">
         Create Course
       </Button>
-    </form>
+    </div>
   );
 };
 

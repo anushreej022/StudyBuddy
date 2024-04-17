@@ -1,13 +1,13 @@
 const Course = require('../models/course');
 const { uploadImageToCloudinary, uploadVideoToCloudinary } = require('../utils/cloudinaryUploader');
+var fs = require('fs-extra');
 
 // Create a new course
 exports.createCourse = async (req, res) => {
   try {
     const { title, description, price } = req.body;
-
     // Validation
-    if (!title || !description || !price || !req.file || !req.file.thumbnail || !req.file.video) {
+    if (!title || !description || !price || !req.files || !req.files['thumbnail'] || !req.files['video']){
       return res.status(400).json({
         success: false,
         message: 'All fields, thumbnail, and video are required',
@@ -15,10 +15,10 @@ exports.createCourse = async (req, res) => {
     }
 
     // Upload thumbnail to Cloudinary
-    const thumbnailDetails = await uploadImageToCloudinary(req.file.thumbnail);
+    const thumbnailDetails = await uploadImageToCloudinary(`uploads/${req.files['thumbnail'][0].originalname}`);
 
     // Upload video to Cloudinary
-    const videoDetails = await uploadVideoToCloudinary(req.file.video);
+    const videoDetails = await uploadVideoToCloudinary(`uploads/${req.files['video'][0].originalname}`);
 
     // Create new course
     const newCourse = await Course.create({
@@ -28,6 +28,9 @@ exports.createCourse = async (req, res) => {
       videoUrl: videoDetails.secure_url,
       price,
     });
+
+    fs.unlink(`uploads/${req.files['thumbnail'][0].originalname}`);
+    fs.unlink(`uploads/${req.files['video'][0].originalname}`);
 
     res.status(201).json({
       success: true,

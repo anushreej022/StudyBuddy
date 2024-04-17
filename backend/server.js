@@ -2,7 +2,7 @@ const express = require('express')
 const app = express();
 
 // packages
-const fileUpload = require('express-fileupload');
+// const fileUpload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 require('dotenv').config();
@@ -26,12 +26,12 @@ app.use(
         credentials: true
     })
 );
-app.use(
-    fileUpload({
-        useTempFiles: true,
-        tempFileDir: '/tmp'
-    })
-)
+// app.use(
+//     fileUpload({
+//         useTempFiles: true,
+//         tempFileDir: '/tmp'
+//     })
+// )
 
 
 const PORT = process.env.PORT || 8080;

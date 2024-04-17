@@ -8,16 +8,12 @@ const CreateCoursePage = () => {
     // Redirect to another page if needed
   };
 
-  const handleError = () => {
-    window.alert('Error creating course. Please try again.');
-  };
-
   return (
     <Container>
       <Typography variant="h4" align="center" gutterBottom>
         Create a New Course
       </Typography>
-      <CourseForm onSuccess={handleSuccess} onError={handleError} />
+      <CourseForm onSuccess={handleSuccess} />
     </Container>
   );
 };
