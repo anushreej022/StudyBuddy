@@ -8,7 +8,7 @@ import { ImGithub, ImLinkedin2 } from "react-icons/im";
 import StudyNotionLogo from "../../assets/Logo/Logo-Full-Light.png";
 
 // footer data
-const BottomFooter = ["Privacy Policy", "Cookie Policy", "Terms"];
+const BottomFooter = ["Privacy Policy", "Terms"];
 const Resources = [
   "Code challenges",
   "Projects",
