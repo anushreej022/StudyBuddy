@@ -1,3 +1,4 @@
+
 const cloudinary = require('cloudinary').v2;
 const path = require('path');
 const { cloudinaryFolderConfig } = require('../config/cloudinary');
@@ -8,15 +9,18 @@ cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET
-});
+
 
 const uploadImageToCloudinary = (filePath) => {
   return new Promise((resolve, reject) => {
+
     // Read the file from disk
+
     fs.readFile(filePath, (err, fileData) => {
       if (err) {
         reject(err);
       } else {
+
         // Upload the file to Cloudinary
         cloudinary.uploader.upload_stream(
           { folder: cloudinaryFolderConfig.imageFolder }, // Use image folder configuration
@@ -44,6 +48,7 @@ const uploadVideoToCloudinary = (filePath) => {
           // Upload the file to Cloudinary
           cloudinary.uploader.upload_stream(
             { resource_type: 'video', folder: cloudinaryFolderConfig.videoFolder }, // Use image folder configuration
+
             (error, result) => {
               if (error) {
                 reject(error);
@@ -51,6 +56,7 @@ const uploadVideoToCloudinary = (filePath) => {
                 resolve(result);
               }
             }
+
           ).end(fileData);
         }
       });
@@ -58,3 +64,4 @@ const uploadVideoToCloudinary = (filePath) => {
 };
 
 module.exports = { imageUpload, videoUpload, uploadImageToCloudinary, uploadVideoToCloudinary };
+
