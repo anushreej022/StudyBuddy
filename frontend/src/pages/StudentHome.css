@@ -1,0 +1,28 @@
+
+.image-grid {
+    margin-right: 150px;
+    margin-left: 150px;
+    align-items: center;
+}
+
+.rating-stars .fas {
+    color: gold;
+}
+
+.rating-section {
+    margin-top: 10px; /* Adjust the spacing as needed */
+}
+
+.rating-number {
+    font-size: 1.1rem;
+    margin-right: 10px;
+}
+
+.ratings-count {
+    font-size: 1.1rem;
+    margin-left: 10px;
+}
+  
+.rating-stars {
+    font-size: 1.1rem;
+}  
