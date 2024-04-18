@@ -44,6 +44,7 @@ export default function Profile() {
     {courseArray.slice(0, 12).map((course, index) => (
       <div key={index} className="flex flex-col items-center justify-center min-h-[250px] w-full  shadow-md rounded-lg p-4">
         <Enrolled_Course_Card
+        Height={"h-[400px]"} Width={"w-[600px]"}
           course={course}
           index={index}
           stars={ratings[Math.floor(Math.random() * ratings.length)]}

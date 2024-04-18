@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 import CourseService from '../services/courseService';
+import { Link, useNavigate } from "react-router-dom";
 
 const CourseForm = ({ onSuccess }) => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [courseData, setCourseData] = useState({
     title: '',
     description: '',
@@ -34,6 +37,7 @@ const CourseForm = ({ onSuccess }) => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       const formData = new FormData();
 
@@ -58,9 +62,21 @@ const CourseForm = ({ onSuccess }) => {
     } catch (error) {
       console.error('Error creating course:', error);
       // Handle error
+      setLoading(false);
+      navigate("/")
     }
   };
 
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <span className="ms-3">Please wait...</span>
+      </div>
+    );
+  }
   return (
     <form
       className="flex flex-col gap-7"

@@ -49,11 +49,12 @@ const randomImges = [
 
 const Home = () => {
     const [token, setToken] = useState(null);
-
+    const [userType, setUsertype] = useState(null);
 
     useEffect(() => {
         console.log("HITTT", token)
         setToken(sessionStorage.getItem("token"));
+        setUsertype(sessionStorage.getItem("userType"));
     }, [token])
     // get background random images
     const [backgroundImg, setBackgroundImg] = useState(null);
@@ -188,10 +189,10 @@ const Home = () => {
 
 
                     {
-                        token !== null && (
+                        (token !== null && userType == "Student")  && (
                             <div className='mx-auto box-content w-full max-w-maxContentTab px- py-12 lg:max-w-maxContent'>
                             <h2 className='text-white mb-6 text-2xl '>
-                                Popular Picks for You 🏆
+                                Courses Available 🏆
                             </h2>
                             <StudentHome />
     

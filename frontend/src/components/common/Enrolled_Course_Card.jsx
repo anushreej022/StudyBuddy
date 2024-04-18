@@ -57,6 +57,12 @@ function Enrolled_Course_Card({ course, index, Height, Width, stars, ratingCount
                         alt="course video"
                         className={`${Height} ${Width} rounded-xl object-cover`}
                         controls
+                        style={{
+                            width: '100%', // Use '100%' to fill the width of its container
+                            height: '100%', // Use '100%' to fill the height of its container
+                            objectFit: 'cover', // Ensures the video covers the full area, potentially cropping it
+                            borderRadius: '15px' // If you want rounded corners
+                        }}
                     >
                         Your browser does not support the video tag.
                     </video>
