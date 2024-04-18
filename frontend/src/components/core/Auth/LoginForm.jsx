@@ -68,7 +68,7 @@ function LoginForm() {
           navigate("/");
           window.location.reload();
         } else {
-          navigate("/instructorHome");
+          navigate("/");
           window.location.reload();
         }
       })

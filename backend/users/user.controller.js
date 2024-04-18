@@ -154,7 +154,6 @@ module.exports = {
 
   saveUserCourse: async (req, res) => {
     try {
-      console.log(req.body)
       const token = req.body.userToken;
 
       jwt.verify(token, "secret_key", (err, decoded) => {
