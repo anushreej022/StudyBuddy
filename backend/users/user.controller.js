@@ -11,10 +11,10 @@ const {
   uploadVideoToCloudinary,
 } = require("../utils/cloudinaryUploader");
 var fs = require("fs-extra");
-// const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const stripe = require("stripe")(
-  "sk_test_51P5hk306qocSO7qkG9H0hnmstdO45LTGFW1jHldsQInFGnIpcs06HrkZpW2Lhrt0RZD9nEYhy0uk9WhkVdkqcgQp00NmWwXD6X"
-);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+// const stripe = require("stripe")(
+//   "sk_test_51P5hk306qocSO7qkG9H0hnmstdO45LTGFW1jHldsQInFGnIpcs06HrkZpW2Lhrt0RZD9nEYhy0uk9WhkVdkqcgQp00NmWwXD6X"
+// );
 const { v4: uuidv4 } = require("uuid");
 
 module.exports = {

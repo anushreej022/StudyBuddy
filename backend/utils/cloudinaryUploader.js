@@ -5,13 +5,15 @@ const { cloudinaryFolderConfig } = require('../config/cloudinary');
 const fs = require('fs');
 
 // Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET
-});
+
 
 const uploadImageToCloudinary = (filePath) => {
+  cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+  });
+  console.log( process.env.API_KEY)
   return new Promise((resolve, reject) => {
 
     // Read the file from disk

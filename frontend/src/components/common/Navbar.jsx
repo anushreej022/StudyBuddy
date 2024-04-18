@@ -12,11 +12,12 @@ import {  useNavigate } from "react-router-dom";
 const Navbar = () => {
     // console.log("Printing base url: ", import.meta.env.VITE_APP_BASE_URL);
     const [token, setToken] = useState(null);
-
+    const [userType, setUsertype] = useState(null);
     const navigate = useNavigate();
     useEffect(() => {
         console.log("HITTT", token)
         setToken(sessionStorage.getItem("token"));
+        setUsertype(sessionStorage.getItem("userType"));
     }, [token])
     // const { token } = sessionStorage.getItem("token")
     const { user } = useSelector((state) => state.profile);
@@ -169,13 +170,25 @@ const Navbar = () => {
                     }
 
 {
-                        token !== null && (
+                        (token !== null && userType == "Student") && (
                             <Link to="/profile">
                                 {/* <button className='border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100 rounded-md focus:outline-8 outline-yellow-50'> */}
                                 <button className={` px-[12px] py-[8px] text-richblack-100 rounded-md 
                                  ${matchRoute('/profile') ? 'border-[2.5px] border-yellow-50' : 'border border-richblack-700 bg-richblack-800'} `}
                                 >
                                     Profile
+                                </button>
+                            </Link>
+                        )
+                    }
+                    {
+                        (token !== null && userType == "Instructor") && (
+                            <Link to="/createCourse">
+                                {/* <button className='border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100 rounded-md focus:outline-8 outline-yellow-50'> */}
+                                <button className={` px-[12px] py-[8px] text-richblack-100 rounded-md 
+                                 ${matchRoute('/createCourse') ? 'border-[2.5px] border-yellow-50' : 'border border-richblack-700 bg-richblack-800'} `}
+                                >
+                                    Create Course
                                 </button>
                             </Link>
                         )
