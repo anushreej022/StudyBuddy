@@ -1,9 +1,10 @@
-import { useState } from "react"
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
-import { useDispatch } from "react-redux"
-import { Link, useNavigate } from "react-router-dom"
-
-import { login } from "../../../services/operations/authAPI"
+import { useState } from "react";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import $ from "jquery";
+import axios from "axios";
+import { login } from "../../../services/operations/authAPI";
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ function LoginForm() {
     password: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
   const { email, password } = formData;
 
@@ -21,13 +22,59 @@ function LoginForm() {
     setFormData((prevData) => ({
       ...prevData,
       [e.target.name]: e.target.value,
-    }))
-  }
+    }));
+  };
+
+  var regExEmail = /([\w\.]+)@northeastern\.edu/;
+  var validEmail = false;
+
+  $(function () {
+    $("#email").on("keyup", function (e) {
+      validationCheck(e, "email");
+    });
+  });
+
+  const validationCheck = (e, idText) => {
+    var value, type, em;
+    value = e.target.value;
+    type = idText;
+    em = "error_" + type;
+
+    switch (type) {
+      case "email":
+        if (!value.trim().match(regExEmail)) {
+          document.getElementById(em).style.display = "block";
+          validEmail = false;
+        } else {
+          document.getElementById(em).style.display = "none";
+          validEmail = true;
+        }
+        break;
+    }
+  };
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    dispatch(login(email, password, navigate))
-  }
+    var username = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    axios
+      .post("http://localhost:5000/user/authenticate", {
+        username: username,
+        password: password,
+      })
+      .then((response) => {
+        const { message, userType, token } = response.data;
+        sessionStorage.setItem("token", token);
+        if (userType === "Student") {
+          navigate("/studentHome");
+        } else {
+          navigate("/instructorHome");
+        }
+      })
+      .catch((error) => {
+        alert("Invalid Credentials");
+      });
+  };
 
   return (
     <form
@@ -42,6 +89,7 @@ function LoginForm() {
           required
           type="text"
           name="email"
+          id="email"
           value={email}
           onChange={handleOnChange}
           placeholder="Enter email address"
@@ -52,6 +100,10 @@ function LoginForm() {
         />
       </label>
 
+      <div id="error_email" style={{ display: "none", color: "red" }}>
+        Please enter valid email address.
+      </div>
+
       <label className="relative">
         <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
           Password <sup className="text-pink-200">*</sup>
@@ -60,6 +112,7 @@ function LoginForm() {
           required
           type={showPassword ? "text" : "password"}
           name="password"
+          id="password"
           value={password}
           onChange={handleOnChange}
           placeholder="Enter Password"
@@ -78,13 +131,7 @@ function LoginForm() {
             <AiOutlineEye fontSize={24} fill="#AFB2BF" />
           )}
         </span>
-        <Link to="/forgot-password">
-          <p className="mt-1 ml-auto max-w-max text-xs text-blue-100">
-            Forgot Password
-          </p>
-        </Link>
       </label>
-
 
       <button
         type="submit"
@@ -93,7 +140,7 @@ function LoginForm() {
         Sign In
       </button>
     </form>
-  )
+  );
 }
 
-export default LoginForm
+export default LoginForm;
