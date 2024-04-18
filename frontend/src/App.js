@@ -1,3 +1,4 @@
+
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./pages/Home";
@@ -13,6 +14,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from "./reducer/index";
 import Navbar from "./components/common/Navbar";
 import Profile from "./pages/Profile";
+import CreateCoursePage from './pages/CreateCoursePage';
 
 const store = configureStore({
   reducer: rootReducer,
@@ -34,10 +36,12 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/studentHome" element={<StudentHome />} />
             <Route path="/profile" element={<Profile />} />
+              <Route exact path="/" element={<CreateCoursePage />} />
           </Routes>
         </Provider>
       </BrowserRouter>
     </div>
+
   );
 }
 
