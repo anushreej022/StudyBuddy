@@ -23,21 +23,19 @@ const StudentHome = () => {
   const navigate = useNavigate();
   const ratings = [3.5, 4.0, 4.5, 5.0];
   const [courseArray, setCourseArray] = useState([]);
-  const makePayment = (token, price) => {
+  const makePayment = (token, price, id) => {
     axios
       .post(`${API_URL}/payment`, {
         token: token,
         price: parseInt(price) * 100,
       })
       .then((response) => {
+        axios.post(`${API_URL}/userCourse`, {
+          userToken: sessionStorage.getItem("token"),
+          courseId: id,
+        });
         alert("Payment successful!");
       });
-    // .then((response) => {
-    //   axios.post("http://localhost:5000/user/userCourse", {
-    //     token: sessionStorage.getItem("token"),
-    //     courseId: props.id,
-    //   });
-    // });
   };
 
   useEffect(() => {
@@ -208,8 +206,10 @@ const StudentHome = () => {
         </div>
       )}
 
+
     </>
   )
+
 };
 
 export default StudentHome;
