@@ -12,6 +12,7 @@ import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from "./reducer/index";
 import Navbar from "./components/common/Navbar";
+import Profile from "./pages/Profile";
 
 const store = configureStore({
   reducer: rootReducer,
@@ -32,6 +33,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/studentHome" element={<StudentHome />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </Provider>
       </BrowserRouter>

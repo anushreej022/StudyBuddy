@@ -13,11 +13,15 @@ export const NavbarLinks = [
     path: "/contact",
   },
   {
-    title: "Login",
-    path: "/Login",
-  },
-  {
-    title: "Sign Up",
-    path: "/signup",
-  },
+    title:"Profile",
+    path:"/profile"
+  }
+  // {
+  //   title: "Login",
+  //   path: "/Login",
+  // },
+  // {
+  //   title: "Sign Up",
+  //   path: "/signup",
+  // },
 ];
