@@ -12,6 +12,7 @@ import { FaArrowRight } from "react-icons/fa"
 
 import { motion } from 'framer-motion'
 import { fadeIn, } from './../components/common/motionFrameVarients';
+import StudentHome from './StudentHome';
 
 // background random images
 import backgroundImg1 from '../assets/Images/random bg img/coding bg1.jpg'
@@ -26,6 +27,7 @@ import backgroundImg9 from '../assets/Images/random bg img/coding bg9.jpg'
 import backgroundImg10 from '../assets/Images/random bg img/coding bg10.jpg'
 import backgroundImg111 from '../assets/Images/random bg img/coding bg11.jpg'
 
+const API_URL = "http://localhost:5000/user";
 
 const randomImges = [
     backgroundImg1,
@@ -46,7 +48,14 @@ const randomImges = [
 
 
 const Home = () => {
+    const [token, setToken] = useState(null);
+    const [userType, setUsertype] = useState(null);
 
+    useEffect(() => {
+        console.log("HITTT", token)
+        setToken(sessionStorage.getItem("token"));
+        setUsertype(sessionStorage.getItem("userType"));
+    }, [token])
     // get background random images
     const [backgroundImg, setBackgroundImg] = useState(null);
 
@@ -85,8 +94,16 @@ const Home = () => {
                                         transition-all duration-200 hover:scale-95 w-fit'>
                             <div className='flex flex-row items-center gap-2 rounded-full px-10 py-[5px]
                               transition-all duration-200 group-hover:bg-richblack-900'>
-                                <p>Become an Instructor</p>
-                                <FaArrowRight />
+                                {
+                                    token==null && (
+                                        <>
+                                        <p>Become an Instructor</p>
+                                        <FaArrowRight />
+                                        </>
+                                    )
+                                }
+                                
+                              
                             </div>
                         </div>
 
@@ -112,13 +129,17 @@ const Home = () => {
                     >
                         With our online coding courses, you can learn at your own pace, from anywhere in the world, and get access to a wealth of , including hands-on projects, quizzes, and personalized feedback from instructors.
                     </motion.div>
+{
+    token == null && (
+        <div className='flex flex-row gap-7 mt-8'>
+        <CTAButton active={true} linkto={"/signup"}>
+            Learn More
+        </CTAButton>
+    </div>
+    )
+}
 
-
-                    <div className='flex flex-row gap-7 mt-8'>
-                        <CTAButton active={true} linkto={"/signup"}>
-                            Learn More
-                        </CTAButton>
-                    </div>
+                 
                 </div>
 
                 {/* animated code */}
@@ -159,7 +180,28 @@ const Home = () => {
                     </div> 
 
 
+                      {/*Section 3 */}
+                {/* <div className='mt-14 w-11/12 mx-auto max-w-maxContent flex-col items-center justify-between gap-8 first-letter bg-richblack-900 text-white'>
                     
+                </div> */}
+
+             
+
+
+                    {
+                        (token !== null && userType == "Student")  && (
+                            <div className='mx-auto box-content w-full max-w-maxContentTab px- py-12 lg:max-w-maxContent'>
+                            <h2 className='text-white mb-6 text-2xl '>
+                                Courses Available 🏆
+                            </h2>
+                            <StudentHome />
+    
+                        </div>
+                        )
+                    }
+
+
+
 
 
                 {/*Section 2  */}
@@ -175,11 +217,18 @@ const Home = () => {
                                 <div className='text-[16px]'>
                                     The modern StudyBuddy is the dictates its own terms. Today, to be a competitive specialist requires more than professional skills.
                                 </div>
-                                <CTAButton active={true} linkto={"/signup"}>
+                                
+
+                                {
+    token == null && (
+        <CTAButton active={true} linkto={"/signup"}>
                                     <div>
                                         Learn more
                                     </div>
                                 </CTAButton>
+    )
+}
+
                             </div>
                         </div>
 
@@ -191,13 +240,16 @@ const Home = () => {
                     </div>
 
                 </div>
-
-
-                {/*Section 3 */}
-                <div className='mt-14 w-11/12 mx-auto max-w-maxContent flex-col items-center justify-between gap-8 first-letter bg-richblack-900 text-white'>
+                {
+                        token == null && (
+                            <div className='mt-14 w-11/12 mx-auto max-w-maxContent flex-col items-center justify-between gap-8 first-letter bg-richblack-900 text-white'>
                     <InstructorSection />
 
                 </div>
+                        )
+                    }
+
+              
 
                 {/*Footer */}
                 <Footer />

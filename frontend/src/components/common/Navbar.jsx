@@ -6,12 +6,20 @@ import { fetchCourseCategories } from './../../services/operations/courseDetails
 import { AiOutlineShoppingCart } from "react-icons/ai"
 import { MdKeyboardArrowDown } from "react-icons/md"
 import { NavbarLinks } from "../../data/navbar-links"
-
+import {  useNavigate } from "react-router-dom";
 
 
 const Navbar = () => {
     // console.log("Printing base url: ", import.meta.env.VITE_APP_BASE_URL);
-    const { token } = useSelector((state) => state.auth);
+    const [token, setToken] = useState(null);
+    const [userType, setUsertype] = useState(null);
+    const navigate = useNavigate();
+    useEffect(() => {
+        console.log("HITTT", token)
+        setToken(sessionStorage.getItem("token"));
+        setUsertype(sessionStorage.getItem("userType"));
+    }, [token])
+    // const { token } = sessionStorage.getItem("token")
     const { user } = useSelector((state) => state.profile);
     // console.log('USER data from Navbar (store) = ', user)
     const { totalItems } = useSelector((state) => state.cart)
@@ -22,6 +30,7 @@ const Navbar = () => {
 
 
     const fetchSublinks = async () => {
+        
         try {
             setLoading(true)
             const res = await fetchCourseCategories();
@@ -48,6 +57,13 @@ const Navbar = () => {
     const matchRoute = (route) => {
         return matchPath({ path: route }, location.pathname);
     }
+    const logOut = () => {
+        sessionStorage.removeItem("token");
+    sessionStorage.removeItem("userType");
+        navigate("/");
+        window.location.reload();
+    };
+    
 
 
     // when user scroll down , we will hide navbar , and if suddenly scroll up , we will show navbar 
@@ -87,58 +103,30 @@ const Navbar = () => {
                 </Link>
 
                 {/* Nav Links - visible for only large devices*/}
+               
                 <ul className='hidden sm:flex gap-x-6 text-richblack-25'>
-                    {
-                        NavbarLinks.map((link, index) => (
-                            <li key={index}>
-                                {
-                                    link.title === "Catalog" ? (
-                                        <div
-                                            className={`group relative flex cursor-pointer items-center gap-1 ${matchRoute("/catalog/:catalogName")
-                                                ? "bg-yellow-25 text-black rounded-xl p-1 px-3"
-                                                : "text-richblack-25 rounded-xl p-1 px-3"
-                                                }`}
-                                        >
-                                            <p>{link.title}</p>
-                                            <MdKeyboardArrowDown />
-                                            {/* drop down menu */}
-                                            <div className="invisible absolute left-[50%] top-[50%] z-[1000] flex w-[200px] translate-x-[-50%] translate-y-[3em] 
-                                                    flex-col rounded-lg bg-richblack-5 p-4 text-richblack-900 opacity-0 transition-all duration-150 group-hover:visible 
-                                                    group-hover:translate-y-[1.65em] group-hover:opacity-100 lg:w-[300px]"
-                                            >
-                                                <div className="absolute left-[50%] top-0 z-[100] h-6 w-6 translate-x-[80%] translate-y-[-40%] rotate-45 select-none rounded bg-richblack-5"></div>
-                                                {loading ? (<p className="text-center ">Loading...</p>)
-                                                    : subLinks.length ? (
-                                                        <>
-                                                            {subLinks?.map((subLink, i) => (
-                                                                <Link
-                                                                    to={`/catalog/${subLink.name
-                                                                        .split(" ")
-                                                                        .join("-")
-                                                                        .toLowerCase()}`}
-                                                                    className="rounded-lg bg-transparent py-4 pl-4 hover:bg-richblack-50"
-                                                                    key={i}
-                                                                >
-                                                                    <p>{subLink.name}</p>
-                                                                </Link>
-                                                            ))}
-                                                        </>
-                                                    ) : (
-                                                        <p className="text-center">No Courses Found</p>
-                                                    )}
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <Link to={link?.path}>
-                                            <p className={`${matchRoute(link?.path) ? "bg-yellow-25 text-black" : "text-richblack-25"} rounded-xl p-1 px-3 `}>
-                                                {link.title}
+                    <li>
+                    <Link to={"/"}>
+                                            <p className={`${matchRoute("/") ? "bg-yellow-25 text-black" : "text-richblack-25"} rounded-xl p-1 px-3 `}>
+                                                Home
                                             </p>
-                                        </Link>)
-                                }
-                            </li>
-                        ))}
-                </ul>
-
+                                        </Link>
+                    </li>
+                    <li>
+                    <Link to={"/about"}>
+                                            <p className={`${matchRoute("/about") ? "bg-yellow-25 text-black" : "text-richblack-25"} rounded-xl p-1 px-3 `}>
+                                                About Us
+                                            </p>
+                                        </Link>
+                    </li>
+                    <li>
+                    <Link to={"/contact"}>
+                                            <p className={`${matchRoute("/contact") ? "bg-yellow-25 text-black" : "text-richblack-25"} rounded-xl p-1 px-3 `}>
+                                                Contact Us
+                                            </p>
+                                        </Link>
+                    </li>
+                    </ul>
 
 
 
@@ -157,13 +145,13 @@ const Navbar = () => {
                         )
                     }
                     {
-                        token === null && (
+                        token == null && (
                             <Link to="/login">
                                 {/* <button className='border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100 rounded-md focus:outline-8 outline-yellow-50'> */}
                                 <button className={` px-[12px] py-[8px] text-richblack-100 rounded-md 
                                  ${matchRoute('/login') ? 'border-[2.5px] border-yellow-50' : 'border border-richblack-700 bg-richblack-800'} `}
                                 >
-                                    Log in
+                                    Log In
                                 </button>
                             </Link>
                         )
@@ -176,6 +164,43 @@ const Navbar = () => {
                                  ${matchRoute('/signup') ? 'border-[2.5px] border-yellow-50' : 'border border-richblack-700 bg-richblack-800'} `}
                                 >
                                     Sign Up
+                                </button>
+                            </Link>
+                        )
+                    }
+
+{
+                        (token !== null && userType == "Student") && (
+                            <Link to="/profile">
+                                {/* <button className='border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100 rounded-md focus:outline-8 outline-yellow-50'> */}
+                                <button className={` px-[12px] py-[8px] text-richblack-100 rounded-md 
+                                 ${matchRoute('/profile') ? 'border-[2.5px] border-yellow-50' : 'border border-richblack-700 bg-richblack-800'} `}
+                                >
+                                    Profile
+                                </button>
+                            </Link>
+                        )
+                    }
+                    {
+                        (token !== null && userType == "Instructor") && (
+                            <Link to="/createCourse">
+                                {/* <button className='border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100 rounded-md focus:outline-8 outline-yellow-50'> */}
+                                <button className={` px-[12px] py-[8px] text-richblack-100 rounded-md 
+                                 ${matchRoute('/createCourse') ? 'border-[2.5px] border-yellow-50' : 'border border-richblack-700 bg-richblack-800'} `}
+                                >
+                                    Create Course
+                                </button>
+                            </Link>
+                        )
+                    }
+                    {
+                        token !== null && (
+                            <Link to="/">
+                                {/* <button className='border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100 rounded-md'> */}
+                                <button onClick={logOut} className={` px-[12px] py-[8px] text-richblack-100 rounded-md 
+                                 ${matchRoute('/') ? 'border-[2.5px] border-yellow-50' : 'border border-richblack-700 bg-richblack-800'} `}
+                                >
+                                    Log Out
                                 </button>
                             </Link>
                         )
