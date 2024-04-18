@@ -63,10 +63,13 @@ function LoginForm() {
       .then((response) => {
         const { message, userType, token } = response.data;
         sessionStorage.setItem("token", token);
+        sessionStorage.setItem("userType", userType);
         if (userType === "Student") {
-          navigate("/studentHome");
+          navigate("/");
+          window.location.reload();
         } else {
           navigate("/instructorHome");
+          window.location.reload();
         }
       })
       .catch((error) => {

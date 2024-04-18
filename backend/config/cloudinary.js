@@ -7,13 +7,18 @@ exports.cloudinaryConnect = () => {
       api_key: process.env.API_KEY,
       api_secret: process.env.API_SECRET,
     });
-    console.log("Cloudinary connected successfully");
+
+    console.log('Cloudinary connected successfully');
+
   } catch (error) {
     console.log(error);
   }
 };
 
 exports.cloudinaryFolderConfig = {
-  imageFolder: "StudyBuddy/Thumbnails",
-  videoFolder: "StudyBuddy/Lectures",
-};
+
+	imageFolder: 'StudyBuddy/Thumbnails', // Change the image folder name to "StudyBuddy/Thumbnails"
+	videoFolder: 'StudyBuddy/Lectures', // Change the video folder name to "StudyBuddy/lecture videos"
+  };
+  
+
