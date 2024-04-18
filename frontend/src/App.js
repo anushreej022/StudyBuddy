@@ -36,7 +36,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/studentHome" element={<StudentHome />} />
             <Route path="/profile" element={<Profile />} />
-              <Route exact path="/" element={<CreateCoursePage />} />
+              <Route exact path="/createCourse" element={<CreateCoursePage />} />
           </Routes>
         </Provider>
       </BrowserRouter>

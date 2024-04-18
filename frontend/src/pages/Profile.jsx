@@ -21,15 +21,20 @@ export default function Profile() {
         }
       }, []);
       const [courseArray, setCourseArray] = useState([]);
+      // useEffect(() => {
+      //   axios
+      //     .get(`${API_URL}/getAllCourses`)
+      //     .then((res) => setCourseArray(res.data));
+      // }, []);
+  
       useEffect(() => {
         axios
-          .get(`${API_URL}/getAllCourses`)
+          .post(`${API_URL}/getCourseByUsername`, {userToken: sessionStorage.getItem("token")})
           .then((res) => setCourseArray(res.data));
       }, []);
-  
 
       useEffect(() => {
-        console.log(courseArray);
+        console.log("HELO",courseArray);
       }, []);
     return (
         <>     

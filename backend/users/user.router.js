@@ -8,12 +8,16 @@ const {
   getAllCourses,
   createCourse,
   processPayment,
+  saveUserCourse,
+  getCourseByUsername,
 } = require("./user.controller");
 
 router.post("/create", createUser);
 router.post("/authenticate", authenticateUser);
 router.get("/getAllCourses", getAllCourses);
 router.post("/payment", processPayment);
+router.post("/userCourse", saveUserCourse);
+router.post("/getCourseByUsername", getCourseByUsername);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
