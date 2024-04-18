@@ -8,21 +8,19 @@ const API_URL = "http://localhost:5000/user";
 
 const StudentHome = () => {
   const [courseArray, setCourseArray] = useState([]);
-  const makePayment = (token, price) => {
+  const makePayment = (token, price, id) => {
     axios
       .post(`${API_URL}/payment`, {
         token: token,
         price: parseInt(price) * 100,
       })
       .then((response) => {
+        axios.post(`${API_URL}/userCourse`, {
+          userToken: sessionStorage.getItem("token"),
+          courseId: id,
+        });
         alert("Payment successful!");
       });
-    // .then((response) => {
-    //   axios.post("http://localhost:5000/user/userCourse", {
-    //     token: sessionStorage.getItem("token"),
-    //     courseId: props.id,
-    //   });
-    // });
   };
 
   useEffect(() => {
@@ -95,7 +93,9 @@ const StudentHome = () => {
                       </button>
                       <StripeCheckout
                         stripeKey="pk_test_51P5hk306qocSO7qkMBikZUbyDyYR010PPqNdKLGJS3XQrwUyCoRmT0hVEAL1g3OXWhqOyaXTpc9EcyV56cyYxq9f00B8sUZv7N"
-                        token={(token) => makePayment(token, courses.price)}
+                        token={(token) =>
+                          makePayment(token, courses.price, courses._id)
+                        }
                         name="Buy"
                         className="btn-stripe-checkout"
                         style={{

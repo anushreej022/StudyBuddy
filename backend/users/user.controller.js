@@ -2,14 +2,19 @@ const User = require("../models/userModel");
 const { genSaltSync, hashSync } = require("bcrypt");
 var bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const UserCourse = require("../models/userCourseModel");
 const Course = require("../models/courseModel");
+const { ObjectId } = require("mongoose").Types;
+
 const {
   uploadImageToCloudinary,
   uploadVideoToCloudinary,
 } = require("../utils/cloudinaryUploader");
 var fs = require("fs-extra");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+// const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(
+  "sk_test_51P5hk306qocSO7qkG9H0hnmstdO45LTGFW1jHldsQInFGnIpcs06HrkZpW2Lhrt0RZD9nEYhy0uk9WhkVdkqcgQp00NmWwXD6X"
+);
 const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
@@ -145,5 +150,59 @@ module.exports = {
       })
       .then((result) => res.status(200).json(result))
       .catch((err) => console.log(err));
+  },
+
+  saveUserCourse: async (req, res) => {
+    try {
+      const token = req.body.userToken;
+
+      jwt.verify(token, "secret_key", (err, decoded) => {
+        const username = decoded.userName;
+        const courseId = req.body.courseId;
+        const newUserCourse = new UserCourse({
+          courseId,
+          username,
+        });
+        newUserCourse.save();
+        res.status(201).json({ message: "User Course created successfully" });
+      });
+    } catch (err) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+
+  getCourseByUsername: async (req, res) => {
+    function verifyToken(token) {
+      return new Promise((resolve, reject) => {
+        jwt.verify(token, "secret_key", (err, decoded) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(decoded);
+          }
+        });
+      });
+    }
+
+    try {
+      const token = req.body.userToken;
+      const decoded = await verifyToken(token);
+      const username = decoded.userName;
+      const userCourses = await UserCourse.find(
+        { username },
+        { __v: 0, _id: 0, username: 0 }
+      );
+      const promises = userCourses.map(async (course) => {
+        const { courseId } = course;
+        const courseIdObject = new ObjectId(courseId);
+        const courses = await Course.findOne({ _id: courseIdObject });
+        return courses;
+      });
+      const results = await Promise.all(promises);
+      return res.json(results);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   },
 };
